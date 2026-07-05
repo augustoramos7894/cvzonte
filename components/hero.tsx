@@ -17,7 +17,7 @@ export default function Hero() {
       </p>
 
       <div className="flex gap-4">
-        <Button texto="Criar meu currículo" />
+        <Button texto="Criar meu curriculo" href="/create-cv" />
         <Button texto="Ver demonstração" />
       </div>
 
