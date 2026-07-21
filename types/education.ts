@@ -4,4 +4,4 @@ export interface Education {
   course: string;
   startDate: string;
   endDate: string;
-}
+};

@@ -1,5 +1,7 @@
 import { Experience } from "@/types/experience";
 import { Profession } from "@/types/profession";
+import { Education } from "@/types/education";
+import { Language } from "@/types/language";
 
 type CVFormProps = {
   name: string;
@@ -8,15 +10,17 @@ type CVFormProps = {
   summary: string;
   skills: string;
   selectedProfession?: Profession;
-
   experiences: Experience[];
+  education: Education[];
+  languages: Language[];
+  
+  onReset: () => void;
 
   onNameChange: (value: string) => void;
   onEmailChange: (value: string) => void;
   onDesiredRoleChange: (value: string) => void;
   onSummaryChange: (value: string) => void;
   onSkillsChange: (value: string) => void;
-
   onAddExperience: () => void;
   onRemoveExperience: (index: number) => void;
   onExperienceChange: (
@@ -25,7 +29,25 @@ type CVFormProps = {
     value: string
   ) => void;
 
-  children: React.ReactNode;
+  onAddEducation: () => void;
+  onRemoveEducation: (index: number) => void;
+  onEducationChange: (
+    index: number,
+    field: keyof Omit<Education, "id">,
+    value: string
+  ) => void;
+  
+  onAddLanguage: () => void;
+  onRemoveLanguage: (index: number) => void;
+  onLanguageChange: (
+    index: number,
+    field: keyof Omit<Language, "id">,
+    value: string
+  ) => void;
+  
+  onDownloadPDF: () => void;
+
+  
 
 };
 
@@ -37,15 +59,29 @@ export default function CVForm({
   skills,
   selectedProfession,
   experiences,
+  education,
+  languages,
+
   onNameChange,
   onEmailChange,
   onDesiredRoleChange,
   onSummaryChange,
   onSkillsChange,
+
   onAddExperience,
   onRemoveExperience,
   onExperienceChange,
-  children,
+
+  onAddEducation,
+  onRemoveEducation,
+  onEducationChange,
+
+  onAddLanguage,
+  onRemoveLanguage,
+  onLanguageChange,
+
+  onReset,
+  onDownloadPDF,
 }: CVFormProps) {
   function addSkill(skill: string) {
     const currentSkills = skills
@@ -207,11 +243,11 @@ export default function CVForm({
     <input
       className="w-full rounded border p-3"
       placeholder="Cargo"
-      value={experience.role}
+      value={experience.position}
       onChange={(event) =>
         onExperienceChange(
           index,
-          "role",
+          "position",
           event.target.value
         )
       }
@@ -266,7 +302,169 @@ export default function CVForm({
   + Adicionar experiência
 </button>
 
-      {children}
+<h2 className="text-lg font-semibold">
+  Formação Acadêmica
+</h2>
+
+{education.map((educationItem, index) => (
+  <div
+    key={educationItem.id}
+    className="space-y-3 rounded-lg border p-4"
+  >
+    <div className="flex items-center justify-between">
+      <h3 className="font-semibold">
+        Formação {index + 1}
+      </h3>
+
+      {education.length > 1 && (
+        <button
+          type="button"
+          onClick={() => onRemoveEducation(index)}
+          className="rounded bg-red-500 px-3 py-1 text-sm text-white"
+        >
+          Remover
+        </button>
+      )}
+    </div>
+
+    <input
+      className="w-full rounded border p-3"
+      placeholder="Instituição"
+      value={educationItem.institution}
+      onChange={(event) =>
+        onEducationChange(
+          index,
+          "institution",
+          event.target.value
+        )
+      }
+    />
+
+    <input
+      className="w-full rounded border p-3"
+      placeholder="Curso"
+      value={educationItem.course}
+      onChange={(event) =>
+        onEducationChange(
+          index,
+          "course",
+          event.target.value
+        )
+      }
+    />
+
+    <input
+      className="w-full rounded border p-3"
+      placeholder="Data de início"
+      value={educationItem.startDate}
+      onChange={(event) =>
+        onEducationChange(
+          index,
+          "startDate",
+          event.target.value
+        )
+      }
+    />
+
+    <input
+      className="w-full rounded border p-3"
+      placeholder="Data de término"
+      value={educationItem.endDate}
+      onChange={(event) =>
+        onEducationChange(
+          index,
+          "endDate",
+          event.target.value
+        )
+      }
+    />
+  </div>
+))}
+
+<button
+  type="button"
+  onClick={onAddEducation}
+  className="rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700"
+>
+  + Adicionar formação
+</button>
+
+<h2 className="text-lg font-semibold">
+  Idiomas
+</h2>
+
+{languages.map((language, index) => (
+  <div
+    key={language.id}
+    className="space-y-3 rounded-lg border p-4"
+  >
+    <div className="flex items-center justify-between">
+      <h3 className="font-semibold">
+        Idioma {index + 1}
+      </h3>
+
+      {languages.length > 1 && (
+        <button
+          type="button"
+          onClick={() => onRemoveLanguage(index)}
+          className="rounded bg-red-500 px-3 py-1 text-sm text-white"
+        >
+          Remover
+        </button>
+      )}
+    </div>
+
+    <input
+      className="w-full rounded border p-3"
+      placeholder="Idioma"
+      value={language.name}
+      onChange={(event) =>
+        onLanguageChange(
+          index,
+          "name",
+          event.target.value
+        )
+      }
+    />
+
+    <input
+      className="w-full rounded border p-3"
+      placeholder="Nível"
+      value={language.level}
+      onChange={(event) =>
+        onLanguageChange(
+          index,
+          "level",
+          event.target.value
+        )
+      }
+    />
+  </div>
+))}
+
+<button
+  type="button"
+  onClick={onAddLanguage}
+  className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+>
+  + Adicionar idioma
+</button>
+
+      <button
+        type="button"
+        onClick={onReset}
+        className="rounded-lg border px-4 py-2 font-medium"
+       >
+        Limpar currículo
+      </button>
+
+      <button 
+        type="button"
+        onClick={onDownloadPDF}
+        className="w-full rounde bg-black py-3 text-white"
+      >
+        Baixar PDF
+      </button>
 
       <input
         className="w-full rounded border p-3"
