@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { CVData } from "@/types/cv-data";
 import { Experience } from "@/types/experience";
@@ -49,6 +49,30 @@ const initialCVData: CVData = {
 
 export function useCVData() {
   const [cvData, setCvData] = useState<CVData>(initialCVData);
+  const [isLoaded, setIsLoaded] = useState(false);
+  
+  useEffect(() => {
+  if (!isLoaded) {
+    return;
+  }
+
+  localStorage.setItem(
+    "cvzonte-cv",
+    JSON.stringify(cvData)
+  );
+}, [cvData, isLoaded]);
+
+
+  useEffect(() => {
+  const savedData = localStorage.getItem("cvzonte-cv");
+
+  if (savedData) {
+    setCvData(JSON.parse(savedData));
+  }
+
+  setIsLoaded(true);
+}, []);
+
 
   function updatePersonalInfo(
     field: keyof CVData["personalInfo"],
@@ -219,8 +243,9 @@ export function useCVData() {
   }
 
   function resetCVData() {
-    setCvData(initialCVData)
-  }
+  localStorage.removeItem("cvzonte-cv");
+  setCvData(initialCVData);
+}
 
   return {
     cvData,
