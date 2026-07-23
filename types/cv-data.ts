@@ -15,3 +15,9 @@ export type CVData = {
    education: Education[];
    languages: Language[];
 };
+
+export interface SavedCV {
+  id: string;
+  title: string;
+  data: CVData;
+}

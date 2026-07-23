@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { CVData } from "@/types/cv-data";
+import { CVData, SavedCV } from "@/types/cv-data";
 import { Experience } from "@/types/experience";
 import { Education } from "@/types/education";
 import { Language } from "@/types/language";
@@ -50,6 +50,7 @@ const initialCVData: CVData = {
 export function useCVData() {
   const [cvData, setCvData] = useState<CVData>(initialCVData);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [savedCVs, setSavedCVs] = useState<SavedCV[]>([]);
   
   useEffect(() => {
   if (!isLoaded) {
@@ -72,6 +73,16 @@ export function useCVData() {
 
   setIsLoaded(true);
 }, []);
+
+  function saveCurrentCV(title: string) {
+    const newCV: SavedCV = {
+      id: crypto.randomUUID(),
+      title,
+      data: cvData,
+    };
+
+    setSavedCVs((prev) => [...prev, newCV]);
+  }
 
 
   function updatePersonalInfo(
